@@ -1,51 +1,119 @@
 package view;
 
-import controller.*;
+import provider.CityFactory;
+import provider.HomeFactory;
+import provider.HumanFactory;
+import provider.MyDisplay;
+import interactor.PersonMediator;
+import interactor.PlaceMediator;
+import interactor.*;
 import model.Display;
 import model.GenealogyTree;
 import model.Mediator;
 import model.ProceduralGeneration;
 
+import java.util.Properties;
+
+/**
+ * Classe responsável por criar um mundo.
+ */
 public class WorldGenerator {
 
-    public static double AVOID_RATE;
-    public static int DEEP_LAYER;
-    public static int MAX_NAME_SIZE;
-    public static int MIN_NAME_SIZE;
-    public static int MAX_HOME_AMMOUNT_PER_CITY;
-    public static String OUTPUT_PERSON_FILE_NAME;
-    public static String OUTPUT_PLACE_FILE_NAME;
+    /**
+     * Taxa de evasao de personagem
+     */
+    private double AVOID_RATE;
 
-    public WorldGenerator() {
+    /**
+     * Quantidade de geracoes
+     */
+    private int DEEP_LAYER;
 
-        this.AVOID_RATE = 0.33;
-        this.DEEP_LAYER = 20;
-        this.MAX_NAME_SIZE = 8;
-        this.MIN_NAME_SIZE = 3;
-        this.MAX_HOME_AMMOUNT_PER_CITY = 10;
-        this.OUTPUT_PERSON_FILE_NAME = "person.csv";
-        this.OUTPUT_PLACE_FILE_NAME = "place.csv";
+    /**
+     * Tamanho maximo de nome de pessoas
+     */
+    private int MAX_PERSON_NAME_SIZE;
+
+    /**
+     * Tamanho minimo de nome de pessoas
+     */
+    private int MIN_PERSON_NAME_SIZE;
+
+    /**
+     * Tamanho maximo de nome de locais
+     */
+    private int MAX_PLACE_NAME_SIZE;
+
+    /**
+     * Tamanho minimo de nome de locais
+     */
+    private int MIN_PLACE_NAME_SIZE;
+
+    /**
+     * Quantidade maxima de casa por cidade
+     */
+    private int MAX_HOME_AMMOUNT_PER_CITY;
+
+    /**
+     * Quantidade minima de casa por cidade
+     */
+    private int MIN_HOME_AMMOUNT_PER_CITY;
+
+    /**
+     * Arquivo de saida de pessoas
+     */
+    private String OUTPUT_PERSON_FILE_NAME;
+
+    /**
+     * Arquivo de saida de locais
+     */
+    private String OUTPUT_PLACE_FILE_NAME;
+
+    /**
+     * Quantidade minima de pessoas por geração
+     */
+    private int MIN_SIZE_PER_LAYER;
+
+    /**
+     * Construtor padrão
+     */
+    public WorldGenerator(Properties properties) {
+
+        this.AVOID_RATE = Double.parseDouble(properties.getProperty("AVOID_RATE"));
+        this.DEEP_LAYER = Integer.parseInt(properties.getProperty("DEEP_LAYER"));
+
+        this.MAX_PERSON_NAME_SIZE = Integer.parseInt(properties.getProperty("MAX_PERSON_NAME_SIZE"));
+        this.MIN_PERSON_NAME_SIZE = Integer.parseInt(properties.getProperty("MIN_PERSON_NAME_SIZE"));
+
+        this.MAX_PLACE_NAME_SIZE = Integer.parseInt(properties.getProperty("MAX_PLACE_NAME_SIZE"));
+        this.MIN_PLACE_NAME_SIZE = Integer.parseInt(properties.getProperty("MIN_PLACE_NAME_SIZE"));
+
+        this.MAX_HOME_AMMOUNT_PER_CITY = Integer.parseInt(properties.getProperty("MAX_HOME_AMMOUNT_PER_CITY"));
+        this.MIN_HOME_AMMOUNT_PER_CITY = Integer.parseInt(properties.getProperty("MIN_HOME_AMMOUNT_PER_CITY"));
+
+        this.MIN_SIZE_PER_LAYER = Integer.parseInt(properties.getProperty("MIN_SIZE_PER_LAYER"));
+
+        this.OUTPUT_PERSON_FILE_NAME = properties.getProperty("OUTPUT_PERSON_FILE_NAME");
+        this.OUTPUT_PLACE_FILE_NAME = properties.getProperty("OUTPUT_PLACE_FILE_NAME");
     }
 
+    /**
+     * Gera uma cidade já populada randomicamente
+     */
     public void generateRandomCity() {
 
-        HumanFactory humanFactory = new HumanFactory();
-        humanFactory.setMaxNameSize(this.MAX_NAME_SIZE);
-        humanFactory.setMinNameSize(this.MIN_NAME_SIZE);
+        HumanFactory humanFactory = new HumanFactory(this.MAX_PERSON_NAME_SIZE, this.MIN_PERSON_NAME_SIZE);
 
-        WorldPopulator world = new WorldPopulator(humanFactory);
+        WorldPopulator world = new WorldPopulator(humanFactory, this.MIN_SIZE_PER_LAYER);
         GenealogyTree population = world.startGeneration(this.DEEP_LAYER);
 
-        CityFactory cityFactory = new CityFactory();
-        cityFactory.setMaxNameSize(this.MAX_NAME_SIZE);
-        cityFactory.setMinNameSize(this.MIN_NAME_SIZE);
-        cityFactory.setMaxHomeAmmount(this.MAX_HOME_AMMOUNT_PER_CITY);
+        CityFactory cityFactory = new CityFactory(
+                this.MAX_PLACE_NAME_SIZE, this.MIN_PLACE_NAME_SIZE,
+                this.MAX_HOME_AMMOUNT_PER_CITY, this.MIN_HOME_AMMOUNT_PER_CITY);
 
         ProceduralGeneration city = cityFactory.create();
 
-        HomeFactory homeFactory = new HomeFactory();
-        homeFactory.setMaxNameSize(this.MAX_NAME_SIZE);
-        homeFactory.setMinNameSize(this.MIN_NAME_SIZE);
+        HomeFactory homeFactory = new HomeFactory(this.MAX_PLACE_NAME_SIZE, this.MIN_PLACE_NAME_SIZE);
 
         Mediator placeMediator = new PlaceMediator(homeFactory);
         city = placeMediator.call(city);
@@ -60,33 +128,4 @@ public class WorldGenerator {
 
         display.display(city);
     }
-
-    public void update_AVOID_RATE(double RANDOM_RATE) {
-        WorldGenerator.AVOID_RATE = RANDOM_RATE;
-    }
-
-    public void update_DEEP_LAYER(int DEEP_LAYER) {
-        WorldGenerator.DEEP_LAYER = DEEP_LAYER;
-    }
-
-    public void update_MAX_NAME_SIZE(int MAX_NAME_SIZE) {
-        WorldGenerator.MAX_NAME_SIZE = MAX_NAME_SIZE;
-    }
-
-    public void update_MIN_NAME_SIZE(int MIN_NAME_SIZE) {
-        WorldGenerator.MIN_NAME_SIZE = MIN_NAME_SIZE;
-    }
-
-    public void update_MAX_HOME_AMMOUNT_PER_CITY(int MAX_HOME_AMMOUNT_PER_CITY) {
-        WorldGenerator.MAX_HOME_AMMOUNT_PER_CITY = MAX_HOME_AMMOUNT_PER_CITY;
-    }
-
-    public void update_OUTPUT_PERSON_FILE_NAME(String OUTPUT_PERSON_FILE_NAME) {
-        WorldGenerator.OUTPUT_PERSON_FILE_NAME = OUTPUT_PERSON_FILE_NAME;
-    }
-
-    public void update_OUTPUT_PLACE_FILE_NAME(String OUTPUT_PLACE_FILE_NAME) {
-        WorldGenerator.OUTPUT_PLACE_FILE_NAME = OUTPUT_PLACE_FILE_NAME;
-    }
-
 }

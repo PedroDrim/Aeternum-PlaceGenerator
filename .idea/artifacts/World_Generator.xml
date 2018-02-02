@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" build-on-make="true" name="World-Generator">
+    <output-path>$PROJECT_DIR$/out/artifacts/World_Generator</output-path>
+    <root id="archive" name="World-Generator.jar">
+      <element id="module-output" name="World Generator" />
+    </root>
+  </artifact>
+</component>
