@@ -1,13 +1,19 @@
 package model;
 
+import model.enums.Size;
+import model.enums.Utility;
+import model.interfaces.Displayable;
+import model.interfaces.Person;
+import model.interfaces.ProceduralGeneration;
+
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Classe referente á uma casa
- * @see model.ProceduralGeneration
+ * @see ProceduralGeneration
  */
-public class Home implements ProceduralGeneration {
+public class Home implements ProceduralGeneration, Displayable {
 
     /**
      * Nome da casa
@@ -15,19 +21,14 @@ public class Home implements ProceduralGeneration {
     private String name;
 
     /**
-     * Quantidade máxima de pessoas
-     */
-    private int maxPersonAmmount;
-
-    /**
-     * Quantidade máxima de locais
-     */
-    private int maxPlaceAmmount;
-
-    /**
      * Tipo de utilidade da casa
      */
     private Utility utility;
+
+    /**
+     * Tamanho de locais
+     */
+    private Size size;
 
     /**
      * Lista de pessoas
@@ -35,22 +36,15 @@ public class Home implements ProceduralGeneration {
     private List<Person> personList;
 
     /**
-     * Lista de locais
-     */
-    private List<ProceduralGeneration> placeList;
-
-    /**
      * Construtor que inicializa as variaveis principais
      * @param name Nome da casa
      * @param utility Tipo de utilidade
      */
-    public Home(String name, Utility utility) {
+    public Home(String name, Utility utility, Size size) {
         this.name = name;
         this.utility = utility;
-        this.maxPersonAmmount = utility.getSize();
-        this.maxPlaceAmmount = 0;
+        this.size = size;
         this.personList = new ArrayList();
-        this.placeList = new ArrayList();
     }
 
     /**
@@ -76,8 +70,8 @@ public class Home implements ProceduralGeneration {
      * @return quantidade máxima de pessoas
      */
     @Override
-    public int getMaxPersonAmmount() {
-        return this.maxPersonAmmount;
+    public int getMaxSize() {
+        return this.size.getSize();
     }
 
     /**
@@ -85,7 +79,7 @@ public class Home implements ProceduralGeneration {
      * @return quantidade atual de pessoas
      */
     @Override
-    public int getPersonListSize() {
+    public int getActualSize() {
         return this.personList.size();
     }
 
@@ -94,19 +88,19 @@ public class Home implements ProceduralGeneration {
      * @return as pessoas nele inseridas
      */
     @Override
-    public List<Person> getPersonList() {
+    public List<Person> getList() {
         return this.personList;
     }
 
     /**
      * Insere uma pessoa no local
      * @param index indice na lista
-     * @param person pessoa a ser inserida
+     * @param object pessoa a ser inserida
      */
     @Override
-    public void insertPerson(int index, Person person) {
-        if (this.maxPersonAmmount > this.personList.size()) {
-            this.personList.add(index, person);
+    public void insert(int index, Object object) {
+        if (this.size.getSize() > this.personList.size()) {
+            this.personList.add(index, (Person) object);
         }
     }
 
@@ -115,59 +109,20 @@ public class Home implements ProceduralGeneration {
      * @param index indice da pessoa a ser removida
      */
     @Override
-    public void removePerson(int index) {
+    public void remove(int index) {
         if (this.personList.size() > index) {
             this.personList.remove(index);
         }
     }
 
-    /**
-     * Obtem a quantidade máxima de locais
-     * @return quantidade máxima de locais
-     */
     @Override
-    public int getMaxPlaceAmmount(){
-        return this.maxPlaceAmmount;
-    }
+    public String display() {
 
-    /**
-     * Obtem a quantidade atual de locais
-     * @return quantidade atual de locais
-     */
-    @Override
-    public int getPlaceListSize() {
-        return this.placeList.size();
-    }
+        StringBuilder builder = new StringBuilder();
+        builder.append(this.name).append(";");
+        builder.append(this.size.getSize()).append(";");
+        builder.append(this.utility.getName()).append("\n");
 
-    /**
-     * Obtem a lista de locais
-     * @return lista de locais
-     */
-    @Override
-    public List<ProceduralGeneration> getPlaceList() {
-        return this.placeList;
-    }
-
-    /**
-     * Insere um local
-     * @param index indice na lista
-     * @param gen local a ser inserido
-     */
-    @Override
-    public void insertPlace(int index, ProceduralGeneration gen) {
-        if (this.maxPlaceAmmount > this.placeList.size()) {
-            this.placeList.add(index, gen);
-        }
-    }
-
-    /**
-     * Remove um local
-     * @param index indice do local a ser removido
-     */
-    @Override
-    public void removePlace(int index) {
-        if (this.maxPlaceAmmount > this.placeList.size()) {
-            this.placeList.remove(index);
-        }
+        return builder.toString();
     }
 }

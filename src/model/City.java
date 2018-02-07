@@ -1,13 +1,18 @@
 package model;
 
+import model.enums.Economy;
+import model.enums.Size;
+import model.interfaces.Displayable;
+import model.interfaces.ProceduralGeneration;
+
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Classe referente á uma cidade
- * @see model.ProceduralGeneration
+ * @see ProceduralGeneration
  */
-public class City implements ProceduralGeneration {
+public class City implements ProceduralGeneration, Displayable {
 
     /**
      * Tipo de economia
@@ -20,19 +25,9 @@ public class City implements ProceduralGeneration {
     private String name;
 
     /**
-     * Quantidade máxima de locais
+     * Tamanho de locais
      */
-    private int maxPlaceAmmount;
-
-    /**
-     * Quantidade máxima de pessoas
-     */
-    private int maxPersonAmmount;
-
-    /**
-     * Lista de pessoas
-     */
-    private List<Person> personList;
+    private Size size;
 
     /**
      * Lista de locais
@@ -43,14 +38,12 @@ public class City implements ProceduralGeneration {
      * Construtor que inicializa as variaveis principais
      * @param name Nome da cidade
      * @param economy Tipo de economia
-     * @param maxPlaceAmmount Quantidade maxima de locais
+     * @param size Quantidade maxima de locais
      */
-    public City(String name, Economy economy, int maxPlaceAmmount) {
+    public City(String name, Economy economy, Size size) {
         this.economy = economy;
         this.name = name;
-        this.maxPlaceAmmount = maxPlaceAmmount;
-        this.maxPersonAmmount = economy.getMaxPersonOnStreet();
-        this.personList = new ArrayList();
+        this.size = size;
         this.placeList = new ArrayList();
     }
 
@@ -77,8 +70,8 @@ public class City implements ProceduralGeneration {
      * @return quantidade máxima de pessoas
      */
     @Override
-    public int getMaxPersonAmmount() {
-        return this.maxPersonAmmount;
+    public int getMaxSize() {
+        return this.size.getSize();
     }
 
     /**
@@ -86,89 +79,29 @@ public class City implements ProceduralGeneration {
      * @return quantidade atual de pessoas
      */
     @Override
-    public int getPersonListSize() {
-        return this.personList.size();
-    }
-
-    /**
-     * Obtem as pessoas nele inseridas
-     * @return as pessoas nele inseridas
-     */
-    @Override
-    public List<Person> getPersonList() {
-        return this.personList;
-    }
-
-    /**
-     * Insere uma pessoa no local
-     * @param index indice na lista
-     * @param person pessoa a ser inserida
-     */
-    @Override
-    public void insertPerson(int index, Person person) {
-        if (this.maxPersonAmmount > this.personList.size()) {
-            this.personList.add(index, person);
-        }
-    }
-
-    /**
-     * Remove uma pessoa no local
-     * @param index indice da pessoa a ser removida
-     */
-    @Override
-    public void removePerson(int index) {
-        if (this.personList.size() > index) {
-            this.personList.remove(index);
-        }
-    }
-
-    /**
-     * Obtem a quantidade máxima de locais
-     * @return quantidade máxima de locais
-     */
-    @Override
-    public int getMaxPlaceAmmount() {
-        return this.maxPlaceAmmount;
-    }
-
-    /**
-     * Obtem a quantidade atual de locais
-     * @return quantidade atual de locais
-     */
-    @Override
-    public int getPlaceListSize() {
+    public int getActualSize() {
         return this.placeList.size();
     }
 
-    /**
-     * Obtem a lista de locais
-     * @return lista de locais
-     */
     @Override
-    public List<ProceduralGeneration> getPlaceList() {
+    public List getList() {
         return this.placeList;
     }
 
-    /**
-     * Insere um local
-     * @param index indice na lista
-     * @param gen local a ser inserido
-     */
     @Override
-    public void insertPlace(int index, ProceduralGeneration gen) {
-        if (this.maxPlaceAmmount > this.placeList.size()) {
-            this.placeList.add(index, gen);
+    public void insert(int index, Object object) {
+        if (this.size.getSize() > this.placeList.size()) {
+            this.placeList.add(index, (Home) object);
         }
     }
 
-    /**
-     * Remove um local
-     * @param index indice do local a ser removido
-     */
     @Override
-    public void removePlace(int index) {
-        if (this.placeList.size() > index) {
-            this.placeList.remove(index);
-        }
+    public void remove(int index) {
+        this.placeList.remove(index);
+    }
+
+    @Override
+    public String display() {
+        return null;
     }
 }

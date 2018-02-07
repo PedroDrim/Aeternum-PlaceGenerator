@@ -1,18 +1,25 @@
 package model;
 
-import java.util.ArrayList;
-import java.util.List;
+import model.enums.Regency;
+import model.enums.Sex;
+import model.interfaces.Displayable;
+import model.interfaces.Person;
 
 /**
  * Classe responsável por referênciar um humano
- * @see model.Person
+ * @see Person
  */
-public class Human implements Person {
+public class Human implements Person, Displayable {
 
     /**
      * Nome da pessoa
      */
-    private String name;
+    private String firstName;
+
+    /**
+     * Sobreome da pessoa
+     */
+    private String secondName;
 
     /**
      * Sexo da pessoa
@@ -25,33 +32,25 @@ public class Human implements Person {
     private Regency regency;
 
     /**
-     * Pai da pessoa
-     */
-    private Person father;
-
-    /**
-     * Mãe da pessoa
-     */
-    private Person mother;
-
-    /**
-     * Lista de crias da pessoa
-     */
-    private List<Person> children;
-
-    /**
      * Construtor que inicializa as variaveis principais
-     * @param name Nome da pessoa
+     * @param firstName Nome da pessoa
      * @param regency Regencia da pessoa
      * @param sex Sexo da pessoa
      */
-    public Human(String name, Sex sex, Regency regency) {
+    public Human(String firstName, String secondName, Sex sex, Regency regency) {
 
-        boolean nameValidation = (name == null || name.isEmpty());
-        if (nameValidation) {
+        boolean firstNameValidation = (firstName == null || firstName.isEmpty());
+        if (firstNameValidation) {
             throw new IllegalArgumentException("Invalid name.");
         } else {
-            this.name = name;
+            this.firstName = firstName;
+        }
+
+        boolean secondtNameValidation = (secondName == null || secondName.isEmpty());
+        if (secondtNameValidation) {
+            throw new IllegalArgumentException("Invalid name.");
+        } else {
+            this.secondName = secondName;
         }
 
         boolean regencyValidation = (regency == null);
@@ -67,41 +66,6 @@ public class Human implements Person {
         } else {
             this.sex = sex;
         }
-
-        this.children = new ArrayList();
-    }
-
-    /**
-     * Define o pai da pessoa
-     * @param father o novo pai
-     */
-    @Override
-    public void setFather(Person father) {
-        if (father != null) {
-            this.father = father;
-        }
-    }
-
-    /**
-     * Defina a mae da pessoa
-     * @param mother a nova mae
-     */
-    @Override
-    public void setMother(Person mother) {
-        if (mother != null) {
-            this.mother = mother;
-        }
-    }
-
-    /**
-     * Adiciona uma criança
-     * @param child criança a ser adicionada
-     */
-    @Override
-    public void setChildren(Person child) {
-        if (child != null) {
-            this.children.add(child);
-        }
     }
 
     /**
@@ -109,8 +73,17 @@ public class Human implements Person {
      * @return o nome da pessoa
      */
     @Override
-    public String getName() {
-        return this.name;
+    public String getFirstName() {
+        return this.firstName;
+    }
+
+    /**
+     * Obtem o sobreNome da pessoa
+     * @return o sobreNome da pessoa
+     */
+    @Override
+    public String getSecondName() {
+        return this.secondName;
     }
 
     /**
@@ -132,43 +105,14 @@ public class Human implements Person {
         return this.sex;
     }
 
-    /**
-     * Obtem o pai da pessoa
-     * @return pai da pessoa
-     */
     @Override
-    public Person getFather() {
-        return this.father;
-    }
+    public String display() {
 
-    /**
-     * Obtem a mãe da pessoa
-     * @return mãe da pessoa
-     */
-    @Override
-    public Person getMother() {
-        return this.mother;
-    }
-
-    /**
-     * Obtem a lista de filhos da pessoa
-     * @return lista de filhos da pessoa
-     */
-    @Override
-    public List<Person> getChildren() {
-        return this.children;
-    }
-
-    /**
-     * Obtem as informações da pessoa
-     * @return informações da pessoa
-     */
-    @Override
-    public String getInfo() {
         StringBuilder builder = new StringBuilder();
-        builder.append("Person: ").append(this.name);
-        builder.append(" - The ").append(this.sex.getName());
-        builder.append(" ").append(this.regency.getName());
+        builder.append(this.firstName).append(";");
+        builder.append(this.secondName).append(";");
+        builder.append(this.sex.getName()).append(";");
+        builder.append(this.regency.getName()).append("\n");
 
         return builder.toString();
     }

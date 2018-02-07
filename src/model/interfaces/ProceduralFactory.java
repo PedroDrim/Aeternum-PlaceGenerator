@@ -1,4 +1,4 @@
-package model;
+package model.interfaces;
 
 /**
  * Interface responsável por gerar locais proceduralmente

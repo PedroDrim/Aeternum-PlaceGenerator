@@ -1,4 +1,6 @@
-package model;
+package model.enums;
+
+import model.interfaces.Person;
 
 /**
  * Obtem o tipo de regência da 'Person'

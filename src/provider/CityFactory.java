@@ -1,9 +1,11 @@
 package provider;
 
+import interactor.Randomizer;
 import model.City;
-import model.Economy;
-import model.ProceduralFactory;
-import model.ProceduralGeneration;
+import model.enums.Economy;
+import model.enums.Size;
+import model.interfaces.ProceduralFactory;
+import model.interfaces.ProceduralGeneration;
 
 import java.util.Random;
 
@@ -12,16 +14,6 @@ import java.util.Random;
  * @see ProceduralFactory
  */
 public class CityFactory implements ProceduralFactory {
-
-    /**
-     * Princípio da aleatoriedade
-     */
-    private Random random;
-
-    /**
-     * String aleatoria
-     */
-    private RandomString randomString;
 
     /**
      * Tamanho máximo de nome
@@ -34,25 +26,17 @@ public class CityFactory implements ProceduralFactory {
     private int minNameSize;
 
     /**
-     * Tamanho máximo de casas
+     * Fábrica para geração de casas
      */
-    private int maxHomeAmmount;
-
-    /**
-     * Tamanho minimo de casas
-     */
-    private int minHomeAmmount;
+    private ProceduralFactory factory;
 
     /**
      * Construtor que inicializa as variaveis principais
      */
-    public CityFactory(int maxNameSize, int minNameSize, int maxHomeAmmount, int minHomeAmmount) {
-        this.random = new Random();
-        this.randomString = new RandomString();
+    public CityFactory(ProceduralFactory factory, int maxNameSize, int minNameSize) {
         this.maxNameSize = maxNameSize;
         this.minNameSize = minNameSize;
-        this.maxHomeAmmount = maxHomeAmmount;
-        this.minHomeAmmount = minHomeAmmount;
+        this.factory = factory;
     }
 
     /**
@@ -63,14 +47,21 @@ public class CityFactory implements ProceduralFactory {
     @Override
     public ProceduralGeneration create() {
 
-        int nameSize = this.minNameSize + this.random.nextInt(this.maxNameSize);
-        int ammount = this.minHomeAmmount + this.random.nextInt(this.maxHomeAmmount);
+        Random random = new Random();
 
-        String placeName = this.randomString.generateName(nameSize);
+        int constant = this.maxNameSize - this.minNameSize;
+        int nameSize = this.minNameSize + random.nextInt(constant);
 
-        Economy economy = RandomizeEnum.randomEconomy();
+        String placeName = Randomizer.generateRandomName(nameSize);
+        Economy economy = Randomizer.randomEconomy();
+        Size size = Randomizer.randomSize();
 
-        ProceduralGeneration city = new City(placeName, economy, ammount);
+        ProceduralGeneration city = new City(placeName, economy, size);
+
+        for(int index = 0; index < size.getSize(); index++){
+            ProceduralGeneration home = factory.create();
+            city.insert(index, home);
+        }
 
         return city;
     }

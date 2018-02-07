@@ -1,4 +1,6 @@
-package model;
+package model.enums;
+
+import model.interfaces.Person;
 
 /**
  * Tipo de sexo das 'Person'
