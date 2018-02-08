@@ -2,7 +2,6 @@ package model;
 
 import model.enums.Size;
 import model.enums.Utility;
-import model.interfaces.Displayable;
 import model.interfaces.Person;
 import model.interfaces.ProceduralGeneration;
 
@@ -13,7 +12,7 @@ import java.util.List;
  * Classe referente á uma casa
  * @see ProceduralGeneration
  */
-public class Home implements ProceduralGeneration, Displayable {
+public class Home implements ProceduralGeneration {
 
     /**
      * Nome da casa
@@ -113,16 +112,5 @@ public class Home implements ProceduralGeneration, Displayable {
         if (this.personList.size() > index) {
             this.personList.remove(index);
         }
-    }
-
-    @Override
-    public String display() {
-
-        StringBuilder builder = new StringBuilder();
-        builder.append(this.name).append(";");
-        builder.append(this.size.getSize()).append(";");
-        builder.append(this.utility.getName()).append("\n");
-
-        return builder.toString();
     }
 }

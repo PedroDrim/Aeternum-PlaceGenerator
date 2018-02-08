@@ -2,7 +2,7 @@ package model;
 
 import model.enums.Economy;
 import model.enums.Size;
-import model.interfaces.Displayable;
+import model.interfaces.Person;
 import model.interfaces.ProceduralGeneration;
 
 import java.util.ArrayList;
@@ -12,7 +12,7 @@ import java.util.List;
  * Classe referente á uma cidade
  * @see ProceduralGeneration
  */
-public class City implements ProceduralGeneration, Displayable {
+public class City implements ProceduralGeneration {
 
     /**
      * Tipo de economia
@@ -98,10 +98,5 @@ public class City implements ProceduralGeneration, Displayable {
     @Override
     public void remove(int index) {
         this.placeList.remove(index);
-    }
-
-    @Override
-    public String display() {
-        return null;
     }
 }

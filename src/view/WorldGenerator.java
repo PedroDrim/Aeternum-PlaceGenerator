@@ -1,11 +1,18 @@
 package view;
 
+import com.google.gson.Gson;
+import model.Home;
+import model.Human;
+import model.interfaces.Person;
 import model.interfaces.ProceduralFactory;
 import model.interfaces.ProceduralGeneration;
 import provider.CityFactory;
 import provider.HomeFactory;
 import provider.HumanFactory;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.Properties;
 
 /**
@@ -36,12 +43,7 @@ public class WorldGenerator {
     /**
      * Arquivo de saida de pessoas
      */
-    private String OUTPUT_PERSON_FILE_NAME;
-
-    /**
-     * Arquivo de saida de locais
-     */
-    private String OUTPUT_PLACE_FILE_NAME;
+    private String OUTPUT_FILE_NAME;
 
     /**
      * Construtor padrão
@@ -54,8 +56,7 @@ public class WorldGenerator {
         this.MAX_PLACE_NAME_SIZE = Integer.parseInt(properties.getProperty("MAX_PLACE_NAME_SIZE"));
         this.MIN_PLACE_NAME_SIZE = Integer.parseInt(properties.getProperty("MIN_PLACE_NAME_SIZE"));
 
-        this.OUTPUT_PERSON_FILE_NAME = properties.getProperty("OUTPUT_PERSON_FILE_NAME");
-        this.OUTPUT_PLACE_FILE_NAME = properties.getProperty("OUTPUT_PLACE_FILE_NAME");
+        this.OUTPUT_FILE_NAME = properties.getProperty("OUTPUT_FILE_NAME");
     }
 
     /**
@@ -75,7 +76,19 @@ public class WorldGenerator {
                 this.MIN_PLACE_NAME_SIZE
         );
 
-        ProceduralGeneration city = cityFactory.create();
-        city.toString();
+        this.createFile(cityFactory.create());
+    }
+
+    private void createFile(ProceduralGeneration city){
+
+        try {
+            Gson gson = new Gson();
+            FileOutputStream outputStream = new FileOutputStream(this.OUTPUT_FILE_NAME);
+            byte[] strToBytes = gson.toJson(city).getBytes();
+            outputStream.write(strToBytes);
+            outputStream.close();
+        } catch (IOException e) {
+            System.out.println("Não foi possivel serializar o objeto.");
+        }
     }
 }

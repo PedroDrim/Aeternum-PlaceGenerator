@@ -2,14 +2,13 @@ package model;
 
 import model.enums.Regency;
 import model.enums.Sex;
-import model.interfaces.Displayable;
 import model.interfaces.Person;
 
 /**
  * Classe responsável por referênciar um humano
  * @see Person
  */
-public class Human implements Person, Displayable {
+public class Human implements Person {
 
     /**
      * Nome da pessoa
@@ -103,17 +102,5 @@ public class Human implements Person, Displayable {
     @Override
     public Sex getSex() {
         return this.sex;
-    }
-
-    @Override
-    public String display() {
-
-        StringBuilder builder = new StringBuilder();
-        builder.append(this.firstName).append(";");
-        builder.append(this.secondName).append(";");
-        builder.append(this.sex.getName()).append(";");
-        builder.append(this.regency.getName()).append("\n");
-
-        return builder.toString();
     }
 }
